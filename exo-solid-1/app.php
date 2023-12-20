@@ -7,8 +7,8 @@ function it($m,$p){
 }
 
 $_FILES['fichier.png'] = [
-    'tmp_name' => './fichier.png',
-    'name' => 'fichier.png',
+    'tmp_name' => './Bourdon.png',
+    'name' => 'Bourdon.png',
     'type' => 'png',
 ];
 
