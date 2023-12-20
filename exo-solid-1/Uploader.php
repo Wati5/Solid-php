@@ -1,6 +1,8 @@
 <?php
+
 require_once 'FileInformation.php';
 require_once 'ImageResizer.php';
+
 class Uploader
 {
     private $name;
@@ -14,18 +16,18 @@ class Uploader
         $this->temporaryName = $fileData['tmp_name'];
         $this->name = $fileData['name'];
         $this->type = $fileData['type'];
-        $this->validTypes = ['PNG', 'png', 'jpeg', 'jpg', 'JPG'];
     }
 
     public function uploadFile()
     {
-        if (!in_array($this->type, $this->validTypes)) {
+        $extensionDetector = new ExtensionDetector();
+        if (!$extensionDetector->isValidType($this->type)) {
             $this->error = 'Le fichier ' . $this->name . ' n\'est pas d\'un type valide';
 
             return false;
-        } else {
-            return true;
         }
+
+        return true;
     }
 
     public function setName($name)
@@ -45,7 +47,9 @@ class Uploader
 
     public function getExtension()
     {
-        return pathinfo($this->name, PATHINFO_EXTENSION);
+        $fileInformation = new FileInformation();
+        
+        return $fileInformation->getExtension($this->name);
     }
 
     public function resize($origin, $destination, $width, $maxHeight)

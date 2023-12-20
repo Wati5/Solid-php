@@ -1,20 +1,14 @@
 <?php
 
-
+require_once 'ExtensionDetector.php';
 
 class ImageResizer
 {
-    public function resize($origin, $destination, $width, $maxHeight)
+    public function resize($extension, $origin, $destination, $width, $maxHeight)
     {
-        $type = $this->getExtension();
-        $pngFamily = ['PNG', 'png'];
-        $jpegFamily = ['jpeg', 'jpg', 'JPG'];
-        if (in_array($type, $jpegFamily)) {
-            $type = 'jpeg';
-        } elseif (in_array($type, $pngFamily)) {
-            $type = 'png';
-        }
-        $function = 'imagecreatefrom' . $type;
+        $extensionDetector = new ExtensionDetector();
+        $extension = $extensionDetector->getExtension($extension);
+        $function = 'imagecreatefrom' . $extension;
 
         if (!is_callable($function)) {
             return false;
@@ -39,7 +33,7 @@ class ImageResizer
             if ($newImage !== false) {
                 \imagecopyresampled($newImage, $image, 0, 0, 0, 0, $width, $height, $imageWidth, $imageHeight);
 
-                $function = 'image' . $type;
+                $function = 'image' . $extension;
 
                 if (!is_callable($function)) {
                     return false;
@@ -52,5 +46,4 @@ class ImageResizer
             }
         }
     }
-    
 }
